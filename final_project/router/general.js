@@ -64,57 +64,49 @@ public_users.get('/review/:isbn',function (req, res) {
 
 // Task 10 
 // Add the code for getting the list of books available in the shop (using Promise)
-public_users.get('/async-get-books',function (req, res) {
-    const get_books = new Promise((resolve, reject) => {
-        resolve(res.send(JSON.stringify({books}, null, 4)));
-      });
-
-      get_books.then(() => console.log("Promise for Task 10 resolved"));
+public_users.get('/async-get-books', async function (req, res) {
+  try {
+    const response = await axios.get('http://localhost:5000/');
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(500).json({message: "Error fetching books"});
+  }
 });
 
 // Task 11
 // Add the code for getting the book details based on ISBN (using Promise)
-public_users.get('/async-get-books/isbn/:isbn',function (req, res) {
-    const get_books_isbn = new Promise((resolve, reject) => {
-        const isbn = req.params.isbn;
-        resolve(res.send(books[isbn]));
-      });
-
-      get_books_isbn.then(() => console.log("Promise for Task 11 resolved"));
+public_users.get('/async-get-books/isbn/:isbn', async function (req, res) {
+  try {
+    const isbn = req.params.isbn;
+    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(500).json({message: "Error fetching book details"});
+  }
 });
 
 // Task 12
 // Add the code for getting the book details based on Author (using Promise)
-public_users.get('/async-get-books/author/:author',function (req, res) {
-    const get_books_author = new Promise((resolve, reject) => {
-        let author = req.params.author;
-        let authorBooks = [];
-        for (let isbn in books) {
-            if (books[isbn].author === author) {
-                authorBooks.push({"isbn": isbn, "title": books[isbn].title, "reviews": books[isbn].reviews});
-            }
-        }
-        resolve(res.send(JSON.stringify({"booksbyauthor": authorBooks}, null, 4)));
-      });
-
-      get_books_author.then(() => console.log("Promise for Task 12 resolved"));
+public_users.get('/async-get-books/author/:author', async function (req, res) {
+  try {
+    const author = req.params.author;
+    const response = await axios.get(`http://localhost:5000/author/${author}`);
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(500).json({message: "Error fetching book details by author"});
+  }
 });
 
 // Task 13
 // Add the code for getting the book details based on Title (using Promise)
-public_users.get('/async-get-books/title/:title',function (req, res) {
-    const get_books_title = new Promise((resolve, reject) => {
-        let title = req.params.title;
-        let titleBooks = [];
-        for (let isbn in books) {
-            if (books[isbn].title === title) {
-                titleBooks.push({"isbn": isbn, "author": books[isbn].author, "reviews": books[isbn].reviews});
-            }
-        }
-        resolve(res.send(JSON.stringify({"booksbytitle": titleBooks}, null, 4)));
-      });
-
-      get_books_title.then(() => console.log("Promise for Task 13 resolved"));
+public_users.get('/async-get-books/title/:title', async function (req, res) {
+  try {
+    const title = req.params.title;
+    const response = await axios.get(`http://localhost:5000/title/${title}`);
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(500).json({message: "Error fetching book details by title"});
+  }
 });
 
 module.exports.general = public_users;
